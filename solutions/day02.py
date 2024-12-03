@@ -33,24 +33,22 @@ def is_safe(level):
         if sign(a-b) != direction or not (1 <= abs(a-b) <= 3):
             return False
     return True
-            
+
 
 def part1():
     return sum(1 for level in INPUT if is_safe(level))
 
 
+def is_loosely_safe(level):
+    if is_safe(level): return True
+    for i in range(len(level)):
+        level_copy = level[:i] + level[i+1:]
+        if is_safe(level_copy): return True
+    return False
+
+
 def part2():
-    count = 0
-    for level in INPUT:
-        if is_safe(level):
-            count += 1
-            continue
-        for i in range(len(level)):
-            level_copy = level[:i] + level[i+1:]
-            if is_safe(level_copy):
-                count += 1
-                break
-    return count
+    return sum(1 for level in INPUT if is_loosely_safe(level))
 
 
 def main():
