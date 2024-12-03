@@ -13,3 +13,4 @@ Welp, I didn't quite achieve my goal from [last year](https://github.com/nielren
 
 # Day 1
 
+Python did most of the heavy lifting here. The list comprehensions make it short and sweet as well. Not much else to say really; we're starting off easy, as usual.
