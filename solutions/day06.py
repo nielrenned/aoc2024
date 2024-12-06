@@ -1,6 +1,3 @@
-from itertools import product
-from tqdm import tqdm
-
 DAY = 6
 RAW_INPUT = None
 INPUT = None
@@ -35,12 +32,11 @@ def parse_input():
 
 
 DIRECTIONS = [(0, -1), (1, 0), (0, 1), (-1, 0)]
+PART_1_LOCATIONS = None
 
 
 def guard_step(direction, position, obstacles):
-    dx, dy = direction
-    gx, gy = position
-    next_position = (gx + dx, gy + dy)
+    next_position = (position[0] + direction[0], position[1] + direction[1])
     if next_position in obstacles:
         direction_index = DIRECTIONS.index(direction)
         new_direction = DIRECTIONS[(direction_index + 1) % 4]
@@ -50,19 +46,21 @@ def guard_step(direction, position, obstacles):
 
 
 def part1():
+    global PART_1_LOCATIONS
     w, h, (gx, gy), obstacles = INPUT
     direction = DIRECTIONS[0]
     locations = set()
     while 0 <= gx < w and 0 <= gy < h:
         locations.add((gx, gy))
         direction, (gx, gy) = guard_step(direction, (gx, gy), obstacles)
+    PART_1_LOCATIONS = locations
     return len(locations)
 
 
 def part2():
     w, h, (start_x, start_y), start_obstacles = INPUT
     count = 0
-    for x, y in tqdm(list(product(range(w), range(h)))):
+    for x, y in PART_1_LOCATIONS:
         if (x, y) == (start_x, start_y): continue
         obstacles = start_obstacles | {(x, y)}
         direction = DIRECTIONS[0]
