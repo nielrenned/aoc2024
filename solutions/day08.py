@@ -1,5 +1,5 @@
 from collections import defaultdict
-from itertools import combinations
+from itertools import permutations
 
 DAY = 8
 RAW_INPUT = None
@@ -15,30 +15,30 @@ def load_input(use_test_input=False):
         RAW_INPUT = f.read()
 
 
-class Point:
+class Vector:
     def __init__(self, x, y):
         self.x = x
         self.y = y
     
     def __add__(self, other):
-        return Point(self.x + other.x, self.y + other.y)
+        return Vector(self.x + other.x, self.y + other.y)
 
     def __sub__(self, other):
-        return Point(self.x - other.x, self.y - other.y)
+        return Vector(self.x - other.x, self.y - other.y)
 
     def __neg__(self):
-        return Point(-self.x, -self.y)
+        return Vector(-self.x, -self.y)
 
     def __mul__(self, i):
         if not isinstance(i, int):
             raise ValueError(f"Cannot multiply a point by {type(i)}. Only multiplication by integers is supported.")
-        return Point(i*self.x, i*self.y)
+        return Vector(i*self.x, i*self.y)
     
     def __rmul__(self, i):
         return self.__mul__(i)
 
     def __eq__(self, other):
-        if not isinstance(other, Point): return False
+        if not isinstance(other, Vector): return False
         return self.x == other.x and self.y == other.y
 
     def __hash__(self):
@@ -57,7 +57,7 @@ def parse_input():
         h = max(h, y+1)
         for x, c in enumerate(line):
             w = max(w, x+1)
-            if c != '.': antennas[c].append(Point(x, y))
+            if c != '.': antennas[c].append(Vector(x, y))
     
     INPUT = w, h, antennas
 
@@ -66,31 +66,25 @@ def inbounds(p):
     w, h, _ = INPUT
     return (0 <= p.x < w) and (0 <= p.y < h)
 
+
 def part1():
-    w, h, antennas = INPUT
+    _, _, antennas = INPUT
     antinodes = set()
     for id in antennas:
-        for p1, p2 in combinations(antennas[id], 2):
-            v = p2 - p1
-            antinodes.add(p1 + 2*v)
-            antinodes.add(p2 - 2*v)
+        for p1, p2 in permutations(antennas[id], 2):
+            antinodes.add(p1 + 2*(p2 - p1))
     return len(list(filter(inbounds, antinodes)))
 
 
 def part2():
-    w, h, antennas = INPUT
+    _, _, antennas = INPUT
     antinodes = set()
     for id in antennas:
-        for p1, p2 in combinations(antennas[id], 2):
+        for p1, p2 in permutations(antennas[id], 2):
             v = p2 - p1
-            p3 = p1
-            while inbounds(p3):
-                antinodes.add(p3)
-                p3 += v
-            p3 = p1
-            while inbounds(p3):
-                antinodes.add(p3)
-                p3 -= v
+            while inbounds(p1):
+                antinodes.add(p1)
+                p1 += v
     return len(antinodes)
 
 
