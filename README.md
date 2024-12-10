@@ -66,3 +66,11 @@ Yet again, I was kind of worried that a brute-force approach wouldn't work here,
 I initially wrote this without writing a `Vector` class and just using tuples, but it looked so ugly I decided to rework it. The overall code is longer, but who knows, maybe this `Vector` class will come in handy on a later problem. You can see the before-and-after by picking out the commits from the log.
 
 Outside of writing the `Vector` class (and remembering to give it a `__hash__` and `__eq__` method), today's problem was straightforward. We get to take advantage of my favorite class, `defaultdict`, to make parsing the input very straightforward. And we use a `dict` to separate out all the relevant points as we parse. Then we can use the great `itertools` hammer to get all possible pairs. I initially used `combinations`, but `permutations` actually simplifies the code, as we can just focus on moving in one direction. Then we can use a `set` to make sure we only capture each antinode once. Man! The Python standard library is so good.
+
+# Day 9
+
+For Part 1, I again just decided to try the brute-force method and it finished instantaneously, so I went with it. The only real trick here was using two pointers, `dest` and `index`, to keep track of the current destination and file blocks, respectively. One quirk here is that the order in which you move these pointers matters. Moving the `index` pointer first results in an off-by-one error.
+
+For Part 2, I used a `namedtuple` to create a very simple class to keep track of spans of blocks rather than pieces of files. This preprocessing allows finding large enough empty spaces very quickly. This does seem inefficient though, as it takes a little over 10 seconds to compute on my laptop. But that's not _that_ long, so I don't feel like reworking it. I think the slowness is in the `find_with_predicate` calls.
+
+For posterity's sake: I think the fast solution would be to have two `dict`s. One that keeps the index and size of each file, keyed to its ID, and one keeps lists of empty block indices, keyed to their size. Then to find empty blocks, you can take the minimum index of the block sizes that are large enough, and then carefully move numbers around in the lists in the second `dict` to keep everything correct. Then "moving" a block would be very fast.
