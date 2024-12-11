@@ -1,4 +1,5 @@
-from collections import namedtuple
+from collections import defaultdict
+from bisect import insort
 
 DAY = 9
 RAW_INPUT = None
@@ -40,44 +41,35 @@ def part1():
     return sum(i*v for i, v in enumerate(disk[:index]))
 
 
-def find_with_predicate(iterable, pred, default_index=-1):
-    return next(((i, e) for i, e in enumerate(iterable) if pred(e)), (default_index, None))
-
-
 def part2():
-    Span = namedtuple('Block', ['id', 'size'])
-
-    # Build the spans
+    files = {}
+    empty_spans = defaultdict(list)
     file_id = 0
-    spans = []
+    index = 0
     for i, size in enumerate(INPUT):
         if i % 2 == 0:
             if size > 0:
-                spans.append(Span(file_id, size))
+                files[file_id] = (index, size)
             file_id += 1
         elif size > 0:
-            spans.append(Span(-1, size))
+            empty_spans[size].append(index)
+        index += size
     
-    # Condense the span
-    max_file_id = file_id - 1 # The loop ends with file_id overcounted by 1
+    max_file_id = file_id - 1
     for file_id in range(max_file_id, -1, -1):
-        file_index, file_span = find_with_predicate(spans, lambda b: b.id == file_id)
-        if file_span is None: continue
-        empty_index, empty_span = find_with_predicate(spans, lambda b: b.id == -1 and b.size >= file_span.size)
-        if empty_span is None or file_index < empty_index: continue
+        file_index, file_size = files[file_id]
+        # Find left-most empty space
+        new_index, empty_size = min(((empty_spans[size][0], size) for size in empty_spans if size >= file_size), key=lambda t: t[0], default=(None, None))
+        if new_index is None or new_index >= file_index: continue
 
-        # Move the span
-        spans[empty_index] = file_span
-        spans[file_index] = Span(-1, file_span.size)
-        if empty_span.size > file_span.size:
-            remainder = Span(-1, empty_span.size - file_span.size)
-            spans.insert(empty_index + 1, remainder)
-        
+        files[file_id] = (new_index, file_size)
+        del empty_spans[empty_size][0]
+        if empty_size > file_size:
+            insort(empty_spans[empty_size - file_size], new_index + file_size)
+    
     total = 0
-    i = 0
-    for span in spans:
-        if span.id != -1: total += sum(range(i, i + span.size)) * span.id
-        i += span.size
+    for file_id, (index, size) in files.items():
+        total += file_id*sum(range(index, index + size))
     return total
 
 
