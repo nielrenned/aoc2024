@@ -7,7 +7,7 @@ Welp, I didn't quite achieve my goal from [last year](https://github.com/nielren
 |       S       |       M       |       T       |       W       |       T       |       F       |       S       |
 |:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 |  [1](#day-1)  |  [2](#day-2)  |  [3](#day-3)  |  [4](#day-4)  |  [5](#day-5)  |  [6](#day-6)  |  [7](#day-7)  |
-|  [8](#day-8)  |   9           |  10           |  11           |  12           |  13           |  14           |
+|  [8](#day-8)  |  [9](#day-9)  | [10](#day-10) | [11](#day-11) |  12           |  13           |  14           |
 |  15           |  16           |  17           |  18           |  19           |  20           |  21           |
 |  22           |  23           |  24           |  25           |               |               |               |
 
@@ -80,3 +80,9 @@ Okay, I ended up writing out the optimized solution the next day. It runs almost
 # Day 10
 
 Initially, I wrote two different functions to solve Part 1 and Part 2. But after solving Part 2, I realized we use its solution to compute Part 1 as well. So I rewrote the solutions to find all paths just once, and then use that solution to calculate the answers for Part 1 and Part 2. The only other interesting thing here is this is a breadth-first search, which means we can write a recursive function and it ends up being pretty clean.
+
+# Day 11
+
+Experience paid off here! Some people have said it reminds them of the [lanternfish](https://adventofcode.com/2021/day/6), but it reminded me more of the [polymers](https://adventofcode.com/2021/day/14) problem from the same year. He was also quite tricky with the red herring that their order is preserved! I realized that it didn't matter in Part 1, but I _was_ worried that it would matter in Part 2. Regardless, I decided to store the numbers in a `dict` from the get-go, because I knew that would be more efficient in Part 1. And it turned out to be the right idea! What a nice little throwback. (For completeness: since order doesn't matter, we can just keep track of how many of each stone exists between each blink, i.e. a `dict` of the form `{value: count, ...}`.)
+
+Also, this has a super interesting math study [here](https://www.reddit.com/r/adventofcode/comments/1hbtz8w/2024_day_11_every_sequence_converges_to_3947/) claiming that every sequence eventually converges to a sequence of length 4219 (with some caveats)! That's wild!
