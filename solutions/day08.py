@@ -30,8 +30,6 @@ class Vector:
         return Vector(-self.x, -self.y)
 
     def __mul__(self, i):
-        if not isinstance(i, int):
-            raise ValueError(f"Cannot multiply a point by {type(i)}. Only multiplication by integers is supported.")
         return Vector(i*self.x, i*self.y)
     
     def __rmul__(self, i):
@@ -43,6 +41,12 @@ class Vector:
 
     def __hash__(self):
         return hash((self.x, self.y))
+    
+    def __str__(self):
+        return f'({self.x}, {self.y})'
+    
+    def __repr__(self):
+        return self.__str__()
 
 
 def parse_input():
