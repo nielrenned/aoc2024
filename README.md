@@ -7,7 +7,7 @@ Welp, I didn't quite achieve my goal from [last year](https://github.com/nielren
 |       S       |       M       |       T       |       W       |       T       |       F       |       S       |
 |:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 |  [1](#day-1)  |  [2](#day-2)  |  [3](#day-3)  |  [4](#day-4)  |  [5](#day-5)  |  [6](#day-6)  |  [7](#day-7)  |
-|  [8](#day-8)  |  [9](#day-9)  | [10](#day-10) | [11](#day-11) |  12           |  13           |  14           |
+|  [8](#day-8)  |  [9](#day-9)  | [10](#day-10) | [11](#day-11) | [12](#day-12) |  13           |  14           |
 |  15           |  16           |  17           |  18           |  19           |  20           |  21           |
 |  22           |  23           |  24           |  25           |               |               |               |
 
@@ -86,3 +86,25 @@ Initially, I wrote two different functions to solve Part 1 and Part 2. But after
 Experience paid off here! Some people have said it reminds them of the [lanternfish](https://adventofcode.com/2021/day/6), but it reminded me more of the [polymers](https://adventofcode.com/2021/day/14) problem from the same year. He was also quite tricky with the red herring that their order is preserved! I realized that it didn't matter in Part 1, but I _was_ worried that it would matter in Part 2. Regardless, I decided to store the numbers in a `dict` from the get-go, because I knew that would be more efficient in Part 1. And it turned out to be the right idea! What a nice little throwback. (For completeness: since order doesn't matter, we can just keep track of how many of each stone exists between each blink, i.e. a `dict` of the form `{value: count, ...}`.)
 
 Also, this has a super interesting math study [here](https://www.reddit.com/r/adventofcode/comments/1hbtz8w/2024_day_11_every_sequence_converges_to_3947/) claiming that every sequence eventually converges to a sequence of length 4219 (with some caveats)! That's wild!
+
+# Day 12
+
+This is the first day that was quite challenging for me! At least Part 2. In Part 1, we can use a simple flood-fill algorithm to find each region. While flood filling, any orthogonal neighbor that's not the same letter will be the location of a fence, and since we visit each "plot" only once, we can count the fence segments this way. That was my initial implementation for the `find_region` function. When I saw Part 2, I decided to change this function instead of redo-ing the work.
+
+For Part 2, my initial thought was to count the number of corners that show up in each region. It turns out this is a valid approach, but I couldn't quite make it work. So my second approach was to actually combine the line segments to count to the number of sides. This was accomplished by looking for pairs of fence segments that were collinear and then combining them until no more pairs could be combined. I kept trying to find shortcuts in calculating this stuff, which led me astray for quite a while, but I ultimately got it working. The big trick here is that we need to make sure that in a situation like below, the middle horizontal and vertical lines don't get combined into one line, as specified in the problem.
+```
++-----------+
+|A A A A A A|
+|     +---+ |
+|A A A|B B|A|
+|     |   | |
+|A A A|B B|A|
+| +---+---+ |
+|A|B B|A A A|
+| |   |     |
+|A|B B|A A A|
+| +---+     |
+|A A A A A A|
++-----------+
+```
+We can use a nice little trick here: put each of the plots on integer coordinates. Then, whenever we find a spot where a fence should be, we shift the line segment over by only 0.25. For example, if we determine that there should be a fence west of `(3, 4)`, we add the segment `(2.75, 3.5)--(2.75, 4.5)`. This ensures that the middle segments in the diagram above won't be collinear! Once I worked out the kinks, this solution ended up working great for the input size. It runs in under 5 seconds, which is good enough for me.
