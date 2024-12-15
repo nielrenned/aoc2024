@@ -7,7 +7,7 @@ Welp, I didn't quite achieve my goal from [last year](https://github.com/nielren
 |       S       |       M       |       T       |       W       |       T       |       F       |       S       |
 |:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 |  [1](#day-1)  |  [2](#day-2)  |  [3](#day-3)  |  [4](#day-4)  |  [5](#day-5)  |  [6](#day-6)  |  [7](#day-7)  |
-|  [8](#day-8)  |  [9](#day-9)  | [10](#day-10) | [11](#day-11) | [12](#day-12) | [13](#day-13) |  14           |
+|  [8](#day-8)  |  [9](#day-9)  | [10](#day-10) | [11](#day-11) | [12](#day-12) | [13](#day-13) | [14](#day-14) |
 |  15           |  16           |  17           |  18           |  19           |  20           |  21           |
 |  22           |  23           |  24           |  25           |               |               |               |
 
@@ -123,3 +123,9 @@ $$Y = \{(a_0 + \hat{a_0}k_y, a_0 + \hat{a_0}k_y) : l_y \le k_y \le u_y \}$$
 We're looking for the intersection of these sets, which gives a system of linear equations! DUH! This took me wayyyyy too long to notice. Rather than bringing in `numpy` or Sage, I decided to work out the formula by hand real quick and implement that. The only hiccup was that floating-point errors would sometimes throw off the solution, so I used Python's `Fraction` class to do the division. Then we just throw out solutions that are out of bounds or non-integral. 
 
 Technically there is the chance of infinitely many solutions, but it looks like the problem-setters intentionally avoided this case (or I got lucky). So we get a unique solution in every case and that's also the minimal solution! Yeesh.
+
+# Day 14
+
+This was a fun day! Part 1 wasn't anything crazy, just simulating robots. My initial simulation code was super slow, but it still worked. Then for Part 2, I initially was going to just print all the robot states to the terminal and look, but it was too slow (and with what my answer ended up being, would've taken way too long). Then I tried to do something where I checked how close the robots were to other robots and looked for the frame that had the highest "neighbor value." For some reason this failed, although I didn't figure out why. Then I checked the subreddit and saw some people talking about variance and the Chinese Remainder Theorem and I smacked my forehead! Of course!
+
+I threw together some code to compute the variance for the x-coordinates and y-coordinates separately and looked for the frames with the lowest variance. We can also do a neat trick here: the x-positions will repeat every 101 seconds and the y-positions will repeat every 103 seconds. So we check for the seconds with the lowest variance separately, then use the Chinese Remainder Theorem to solve for the second where the Christmas tree is! This ends up being relatively simple, as 101 and 103 are both prime, so the CRT applies directly. This also tells us that the robots will cycle every $101\times 103 = 10403$ seconds, so we know the second will be somewhere in that range. There are some super cool visualizations on the subreddit too! I'd highly recommend checking them out.s
