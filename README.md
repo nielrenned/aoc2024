@@ -2,13 +2,15 @@
 
 Solutions to the problems from [Advent of Code 2024](https://adventofcode.com/2024).
 
+# WATCH OUT! SPOILERS AHEAD
+
 Welp, I didn't quite achieve my goal from [last year](https://github.com/nielrenned/aoc2023), but that's okay! It was lofty. We'll see how far I get this year.
 
 |       S       |       M       |       T       |       W       |       T       |       F       |       S       |
 |:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 |  [1](#day-1)  |  [2](#day-2)  |  [3](#day-3)  |  [4](#day-4)  |  [5](#day-5)  |  [6](#day-6)  |  [7](#day-7)  |
 |  [8](#day-8)  |  [9](#day-9)  | [10](#day-10) | [11](#day-11) | [12](#day-12) | [13](#day-13) | [14](#day-14) |
-| [15](#day-15) | [16](#day-16) |  17           |  18           |  19           |  20           |  21           |
+| [15](#day-15) | [16](#day-16) | [17](#day-17) |  18           |  19           |  20           |  21           |
 |  22           |  23           |  24           |  25           |               |               |               |
 
 # Day 1
@@ -151,3 +153,34 @@ First off, we are using [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dij
 I'm sure there are million ways to solve this, but what I settled on creating an adjacency graph that ignored intersections. So in the above example, we would not make a vertex for `B` at all, and instead make the following edges: `A-D (cost 1002)`, `A-C (cost 2)`, `C-D (cost 1002)`. And along with the cost, we store the extra information that we went via `B` so that the path reconstruction can happen accurately.
 
 With this new graph, Djikstra's works perfectly! And for Part 2, we can simply extend it to compute _all_ shortest paths instead of just _a_ shortest path. This was a super neat problem all-in-all, and I'm happy to have solved it on my own.
+
+# Day 17
+
+I was wondering when we'd do the classic microarchitecture emulator! As usual, Part 1 has us setting up the emulator and verifying its output and Part 2 is the real meat of the problem. And today's special is the [quine](https://en.wikipedia.org/wiki/Quine_(computing)). As someone on the subreddit pointed out, when you see a very short input, you know it's gonna be tough.
+
+I knocked out the emulator in Part 1 pretty quickly, so I tried just brute forcing Part 2 while I studied the inputs. It got into the billions before I decided brute force wouldn't work (I should've known, it's day 17), so we had to be a little more clever. Deconstructing the program gave me the following 8 instructions, translated from the assembly. Here `>>` means right-shift and `^` means exponentiate.
+
+```
+loop until a == 0:
+    b := a mod 8
+    b := b xor 2
+    c := a div 2^b == a >> b
+    b := b xor 3
+    b := b xor c
+    output b mod 8
+    a := a div 2^3 == a >> 3
+```
+
+We can "hand compile" this down to two following two statements. However, in doing so, we lose the ability for this problem to solve all possible AoC inputs. I'm okay with this for now.
+
+```
+loop until a == 0:
+    output ((a mod 8) xor (a >> ((a mod 8) xor 2)) xor 1) mod 8
+    a := a >> 3
+```
+
+There are two key observations. First, since we loop until the `A` register is zero, we know that's the final state of the program. Second, we're outputting only the last three bits of `A`. So we can work backwards! Starting from the last number in the program, we check all 8 values for those last three bits of `A` to see which one gives us the correct output. Then we shift left by three, and repeat!
+
+If we do this naively however, we find that we get the wrong answer! What gives?? It turns out there are multiple options at some steps that give the correct output initially, but fail when we get to the first few numbers in the program. So we need to implement backtracking. We can use recursion and the stack to do this, so it doesn't add that much complexity to our code. One we do this, we can find the quine!
+
+This was _such_ an interesting problem. Maybe my favorite so far. The fact that this required analyzing the program made it very fun. And the folks on the subreddit seem to have figured out that there are approximately 200 such programs in the program space that can even produce a quine! (I believe the space is programs of length 16.) Wild stuff.
