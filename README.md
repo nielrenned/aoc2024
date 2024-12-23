@@ -8,7 +8,7 @@ Welp, I didn't quite achieve my goal from [last year](https://github.com/nielren
 |:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 |  [1](#day-1)  |  [2](#day-2)  |  [3](#day-3)  |  [4](#day-4)  |  [5](#day-5)  |  [6](#day-6)  |  [7](#day-7)  |
 |  [8](#day-8)  |  [9](#day-9)  | [10](#day-10) | [11](#day-11) | [12](#day-12) | [13](#day-13) | [14](#day-14) |
-|  15           |  16           |  17           |  18           |  19           |  20           |  21           |
+| [15](#day-15) | [16](#day-16) |  17           |  18           |  19           |  20           |  21           |
 |  22           |  23           |  24           |  25           |               |               |               |
 
 # Day 1
@@ -135,3 +135,19 @@ I threw together some code to compute the variance for the x-coordinates and y-c
 Part 1 wasn't too bad today. For each instruction, we can repeatedly check the map in the direction the robot is trying to move to see if there's a blank space or a wall first. If there's a blank space, we can execute the move, otherwise nothing happens. Originally, I used a functional approach of creating a new map each time we changed it, but I switched to modifying the map in-place for performance reasons.
 
 For Part 2, we can do the exact same thing for horizontal movements, as the logic is the same. I ran into some small bugs with the code that actually performed the moves, but otherwise this part was straightforward. Vertical movement is the real challenge. However, we can use recursion! For each box, we look above the left side and above the right side. For each location, if there's a piece of a box, we recurse into another level of the checking logic and only return `True` if both recursions return `True`. If both locations are clear, then we can return whether or not it's possible to move the box. The logic for moving the boxes works similarly and can be simplified using the assumption that we _can_ move the boxes. (For production code, I would argue that this is a bad design, but for something like this, it's all about performance baby.) I ended up creating a lot of my own little test cases, as I ran into a bunch of little bugs, but otherwise it wasn't _too_ bad.
+
+# Day 16
+
+Today was the first day that forced me to break out pen-and-paper to think about this problem. It's very [relevant](https://www.cnn.com/2017/02/16/world/ups-trucks-no-left-turns/index.html) to the real world though! I also ended up getting rid of the separate `part1` and `part2` functions for this as they are ideally solved simultaneously.
+
+First off, we are using [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra's_algorithm) to find the solution here, as it guarantees an optimal solution. However, there's a catch. Imagine we stumble upon the following intersection, where we're trying to get to `C` and the cost to get to `A` is `5` more than the cost to get to `D`. The correct option is to take the route through `A` because we don't need to turn. However, when Dijkstra's algorithm gets to `B`, it has no way to know that coming from `D` will incur an extra cost of `1000` on the next step. So it will choose the wrong path.
+
+```
+###############
+ A B C -> end #
+## D ##########
+```
+
+I'm sure there are million ways to solve this, but what I settled on creating an adjacency graph that ignored intersections. So in the above example, we would not make a vertex for `B` at all, and instead make the following edges: `A-D (cost 1002)`, `A-C (cost 2)`, `C-D (cost 1002)`. And along with the cost, we store the extra information that we went via `B` so that the path reconstruction can happen accurately.
+
+With this new graph, Djikstra's works perfectly! And for Part 2, we can simply extend it to compute _all_ shortest paths instead of just _a_ shortest path. This was a super neat problem all-in-all, and I'm happy to have solved it on my own.
