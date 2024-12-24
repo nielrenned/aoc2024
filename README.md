@@ -10,7 +10,7 @@ Welp, I didn't quite achieve my goal from [last year](https://github.com/nielren
 |:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 |  [1](#day-1)  |  [2](#day-2)  |  [3](#day-3)  |  [4](#day-4)  |  [5](#day-5)  |  [6](#day-6)  |  [7](#day-7)  |
 |  [8](#day-8)  |  [9](#day-9)  | [10](#day-10) | [11](#day-11) | [12](#day-12) | [13](#day-13) | [14](#day-14) |
-| [15](#day-15) | [16](#day-16) | [17](#day-17) |  18           |  19           |  20           |  21           |
+| [15](#day-15) | [16](#day-16) | [17](#day-17) | [18](#day-18) |  19           |  20           |  21           |
 |  22           |  23           |  24           |  25           |               |               |               |
 
 # Day 1
@@ -184,3 +184,9 @@ There are two key observations. First, since we loop until the `A` register is z
 If we do this naively however, we find that we get the wrong answer! What gives?? It turns out there are multiple options at some steps that give the correct output initially, but fail when we get to the first few numbers in the program. So we need to implement backtracking. We can use recursion and the stack to do this, so it doesn't add that much complexity to our code. One we do this, we can find the quine!
 
 This was _such_ an interesting problem. Maybe my favorite so far. The fact that this required analyzing the program made it very fun. And the folks on the subreddit seem to have figured out that there are approximately 200 such programs in the program space that can even produce a quine! (I believe the space is programs of length 16.) Wild stuff.
+
+# Day 18
+
+Today was a bit of a break considering how hard some of the previous days have been. I originally refactored and reused the Djikstra's algorithm code from Day 16, but then I remembered that Djikstra's width weight 1 steps everywhere is just a breadth-first search (BFS). So I rewrote it to use a BFS that is specific to this problem, i.e. it already knows the start and end points, and all it needs to know is the current state of the falling bytes. It quickly finds the answer to Part 1.
+
+For Part 2, there is a smallish-sized search space that could probably just be brute-forced, but it's much faster to implement a binary-search. We know that before the target byte, there will always be a path, and then from the target byte on, there won't be a path. So we can binary search using this before/after idea and settle on an answer quite quickly.
