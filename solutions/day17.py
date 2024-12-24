@@ -85,7 +85,7 @@ def part2():
 
 
 def main():
-    load_input(use_test_input=True)
+    load_input(use_test_input=False)
     parse_input()
     print('PART 1:', part1())
     print('PART 2:', part2())
