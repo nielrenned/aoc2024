@@ -115,7 +115,7 @@ def solve():
 
 
 def main():
-    load_input(use_test_input=True)
+    load_input(use_test_input=False)
     parse_input()
     part1_answer, part2_answer = solve()
     print('PART 1:', part1_answer)
