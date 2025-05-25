@@ -203,6 +203,8 @@ I spent some more time thinking and came up with absolutely nothing. So I went t
 
 # Day 20
 
+> In May 2025, I found the time to finally wrap this problem up.
+
 The fact that there's only one route to the finish simplifies this problem space immensely. I appreciate the problem writers having some mercy in this case. For Part 1, we first calculate the non-cheating route. Then we check all pairs of possible points along that route to see if a cheat is possible, i.e. if the points are exactly two steps apart, but not two steps apart on the route, we can cheat there. Then we can simply count all these potential cheats, store them in a dictionary keyed to the amount they save, and add up the appropriate points at the end.
 
 In theory, we should easily be able to extend this to Part 2! We expand our search space to consider points that are not just two steps apart, and then we should be good to go! However, this part stumped for quite a while. It took me ages to realize that I was not correctly adding back in the time it took to perform the cheat. That is, if a cheat saved 50 steps on the route, but took 6 steps to perform, I was _not_ storing this as 44 saved, but as 48 saved. The assumption that cheats were exactly two steps long from Part 1 was so embedded in my first solution that I continuously overlooked this. I did eventually this issue, but I'm embarrassed by how long it took. Oh well!
@@ -230,3 +232,5 @@ TBD
 # Day 25
 
 > Note: I finished this problem in December 2024, but I did not write down my thoughts for it. So I'm coming back in May 2025 to attempt to figure out what I was thinking. 
+
+As usual, the actual Christmas Day problem wasn't too bad. We just needed to convert the input into a list of keys and a list of locks (really a list of heights for each) and then check all possible pairs to see how many fit together. Python's list comprehensions and `itertools` come in very handy here for making the code readable.
