@@ -221,6 +221,7 @@ This looks like repeated hashing. It almost feels like we're searching for Bitco
 
 > Note: I finished this problem in December 2024, but I did not write down my thoughts for it. So I'm coming back in May 2025 to attempt to figure out what I was thinking. 
 
+Hey, some graph theory! Always a good time. For Part 1, we can just do an exhaustive search for 3-cliques that contain a vertex starting with t. The search space here is small enough that it completes quickly. For Part 2, we can use a known algorithm for finding a maximal clique: the [Bron-Kerbosch algorithm](https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm). I honestly don't understand exactly how this algorithm works, but it was super easy to implement. I think knowing the vocab "maximal clique" was the thing that helped the most on this problem.
 
 # Day 24
 
