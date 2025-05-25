@@ -203,8 +203,29 @@ I spent some more time thinking and came up with absolutely nothing. So I went t
 
 # Day 20
 
-Quick note: I'm coming back to problems 20-25 in May 2025. I finally made some time to finish this up.
-
 The fact that there's only one route to the finish simplifies this problem space immensely. I appreciate the problem writers having some mercy in this case. For Part 1, we first calculate the non-cheating route. Then we check all pairs of possible points along that route to see if a cheat is possible, i.e. if the points are exactly two steps apart, but not two steps apart on the route, we can cheat there. Then we can simply count all these potential cheats, store them in a dictionary keyed to the amount they save, and add up the appropriate points at the end.
 
 In theory, we should easily be able to extend this to Part 2! We expand our search space to consider points that are not just two steps apart, and then we should be good to go! However, this part stumped for quite a while. It took me ages to realize that I was not correctly adding back in the time it took to perform the cheat. That is, if a cheat saved 50 steps on the route, but took 6 steps to perform, I was _not_ storing this as 44 saved, but as 48 saved. The assumption that cheats were exactly two steps long from Part 1 was so embedded in my first solution that I continuously overlooked this. I did eventually this issue, but I'm embarrassed by how long it took. Oh well!
+
+# Day 21
+
+TBD
+
+# Day 22
+
+> Note: I finished this problem in December 2024, but I did not write down my thoughts for it. So I'm coming back in May 2025 to attempt to figure out what I was thinking. 
+
+This looks like repeated hashing. It almost feels like we're searching for Bitcoin! Defining the `evolve` function was very simple, especially since Python can implicitly handle arbitrarily-sized integers. For Part 1, we just had to evolve all the inputs 2000 times and add them up. Part 2 was a little bit harder, as we needed to track all the sets of diffs as we evolved all the buyer's starting numbers and note down the max value we get for each diff from each monkey. But again, this was no problem for Python, and list comprehension definitely makes it easier to read.
+
+# Day 23
+
+> Note: I finished this problem in December 2024, but I did not write down my thoughts for it. So I'm coming back in May 2025 to attempt to figure out what I was thinking. 
+
+
+# Day 24
+
+TBD
+
+# Day 25
+
+> Note: I finished this problem in December 2024, but I did not write down my thoughts for it. So I'm coming back in May 2025 to attempt to figure out what I was thinking. 
