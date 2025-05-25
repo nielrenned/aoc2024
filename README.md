@@ -10,7 +10,7 @@ Welp, I didn't quite achieve my goal from [last year](https://github.com/nielren
 |:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 |  [1](#day-1)  |  [2](#day-2)  |  [3](#day-3)  |  [4](#day-4)  |  [5](#day-5)  |  [6](#day-6)  |  [7](#day-7)  |
 |  [8](#day-8)  |  [9](#day-9)  | [10](#day-10) | [11](#day-11) | [12](#day-12) | [13](#day-13) | [14](#day-14) |
-| [15](#day-15) | [16](#day-16) | [17](#day-17) | [18](#day-18) |  19           |  20           |  21           |
+| [15](#day-15) | [16](#day-16) | [17](#day-17) | [18](#day-18) | [18](#day-19) | [20](#day-20) |  21           |
 |  22           |  23           |  24           |  25           |               |               |               |
 
 # Day 1
@@ -200,3 +200,11 @@ I thought I could break it down using [partitions](https://en.wikipedia.org/wiki
 My next attempt involved trying to split the string using each possible pattern of towels. For example, to achieve the goal of `rgwrb`, we could split using a `wr` towel, then recurse on the left and right halves after splitting. Sadly, this approach results in double-counting some of the solutions, so I threw it out pretty quick.
 
 I spent some more time thinking and came up with absolutely nothing. So I went to the subreddit, hoping to find a hint. I stumbled upon someone's blog, who described the same issue that I was having. (I wish I could remember who. I'll credit them if I find it.) And they realized what I should've realized much earlier: we can use the `@cache` decorator on the counting function! We'll end up recounting the same substring a lot, so caching speeds it up massively. In fact, it runs in less than a second, when before I think it would've been measured in _days_. Memoization is phenomenal.
+
+# Day 20
+
+Quick note: I'm coming back to problems 20-25 in May 2025. I finally made some time to finish this up.
+
+The fact that there's only one route to the finish simplifies this problem space immensely. I appreciate the problem writers having some mercy in this case. For Part 1, we first calculate the non-cheating route. Then we check all pairs of possible points along that route to see if a cheat is possible, i.e. if the points are exactly two steps apart, but not two steps apart on the route, we can cheat there. Then we can simply count all these potential cheats, store them in a dictionary keyed to the amount they save, and add up the appropriate points at the end.
+
+In theory, we should easily be able to extend this to Part 2! We expand our search space to consider points that are not just two steps apart, and then we should be good to go! However, this part stumped for quite a while. It took me ages to realize that I was not correctly adding back in the time it took to perform the cheat. That is, if a cheat saved 50 steps on the route, but took 6 steps to perform, I was _not_ storing this as 44 saved, but as 48 saved. The assumption that cheats were exactly two steps long from Part 1 was so embedded in my first solution that I continuously overlooked this. I did eventually this issue, but I'm embarrassed by how long it took. Oh well!
