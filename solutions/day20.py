@@ -1,4 +1,3 @@
-from day08 import Vector as Point
 from collections import defaultdict
 
 DAY = 20
@@ -32,16 +31,9 @@ def parse_input():
 
 
 DIRECTIONS = [(0, -1), (1, 0), (0, 1), (-1, 0)]
-TWO_STEPS = [(0, -2), (2, 0), (0, 2), (-2, 0)]
 
-def print_map(map, route):
-    for y, line in enumerate(map):
-        for x, c in enumerate(line):
-            if (x, y) in route: print('O', end='')
-            else: print(c, end='')
-        print()
 
-def part1():
+def count_cheats(min_length, max_length, min_savings):
     start, end, map = INPUT
     route = [start]
     while route[-1] != end:
@@ -52,33 +44,30 @@ def part1():
             if map[ny][nx] == '.':
                 route.append((nx, ny))
                 break
-    
-    SAVE_GOAL = 50
-    LENGTH_MIN = 2
-    LENGTH_MAX = 20
 
-    total = 0
-    counter = defaultdict(int)
+    cheats = defaultdict(int)
     for i1, (x1, y1) in enumerate(route):
-        for i2, (x2, y2) in enumerate(route[i1+SAVE_GOAL+1:]):
-            if LENGTH_MIN <= abs(x1 - x2) + abs(y1 - y2) <= LENGTH_MAX:
-                counter[i2+SAVE_GOAL-1] += 1
-                total += 1
-    
-    for saved_steps in sorted(counter.keys()):
-        print(f'There are {counter[saved_steps]} cheats that save {saved_steps} picoseconds')
+        for i2, (x2, y2) in enumerate(route[i1+2:]):
+            cheat_len = abs(x2 - x1) + abs(y2 - y1)
+            if min_length <= cheat_len <= max_length:
+                cheats[i2+2-cheat_len] += 1
 
-    return total
+    return sum(cheats[s] for s in cheats if s >= min_savings)
+
+
+def part1():
+    return count_cheats(2, 2, 100)
+
 
 def part2():
-    pass
+    return count_cheats(2, 20, 100)
 
 
 def main():
-    load_input(use_test_input=True)
+    load_input(use_test_input=False)
     parse_input()
     print('PART 1:', part1())
-    # print('PART 2:', part2())
+    print('PART 2:', part2())
 
 
 if __name__ == "__main__":
