@@ -227,7 +227,30 @@ Hey, some graph theory! Always a good time. For Part 1, we can just do an exhaus
 
 # Day 24
 
-TBD
+> In May 2025, I found the time to finally wrap this problem up.
+
+Wow, this problem took me a good chunk of an afternoon! Part 1 was straightforward: build a logic gate simulator. (Thankfully there were no flip-flops or anything, just pure cascading logic.) But for Part 2, I was really stumped! The problem space is way too large to brute-force: there are something like 324 quadrillion choices for 4 output swaps. Luckily we're told that this is a binary adder, which is a very well-known, well-studied circuit. (Here I'm again grateful to the authors for not making a weird adder.) I spent quite a while trying to write code to build a correct circuit and then do some sort of name assignment to verify the correctness of each wire. While I do think this idea is sound, I couldn't quite get it working.
+
+My big breakthrough came after drawing out quite a few circuits and giving each intermediate step a name. For example, for input bits $x_i$ and $y_i$, the value of $x_i \text{ AND } y_i$ is used as an input to two different pairs of gates. So it has to be assigned to an intermediate wire, which I called $a_i$. We can name the other intermediate steps as well, but the big insight comes when we analyze the patterns of inputs and outputs. Ignoring the (literal) edge cases, we have the following patterns.
+
+```mermaid
+graph TD;
+
+    A2[AND] --> B2
+    B2[ ] --> C2[OR]
+
+    A3[OR] --> B3
+    B3[ ] --> C3[XOR]
+    B3 --> D3[AND]
+
+    A1["$$x_i \text{ XOR } y_i$$"] --> B1
+    B1["$$c_i$$"] --> C1[XOR]
+    B1 --> D1[AND]
+
+    A4["$$\_\ \text{ XOR }\ \_$$"] --> B4["$$z_i$$"]
+```
+
+We read this diagram as: if the inputs to a wire match the pattern at the top, then that wire must be used in the gates at the bottom, e.g. the input is an `OR` gate, then the output must be used in an `XOR` and an `AND` gate. (The blanks mean the inputs are _not_ $x_i$ and $y_i$.) This pattern holds for every wire except the first and last outputs and the first carry. So we can check for wires that don't match any of these patterns, and those wires will be the ones that must have been swapped. We don't even need to figure out which wires to swap! We can just sort the ones we find that are wrong and we get our answer. I think it might be possible to generate a pathological input that breaks this strategy, but it works for my input, so I'm moving on!
 
 # Day 25
 
