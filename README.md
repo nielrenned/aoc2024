@@ -243,11 +243,11 @@ graph TD;
     B3[ ] --> C3[XOR]
     B3 --> D3[AND]
 
-    A1["$$x_i \text{ XOR } y_i$$"] --> B1
-    B1["$$c_i$$"] --> C1[XOR]
+    A1["x_i XOR y_i"] --> B1
+    B1["c_i"] --> C1[XOR]
     B1 --> D1[AND]
 
-    A4["$$\_\ \text{ XOR }\ \_$$"] --> B4["$$z_i$$"]
+    A4[_ XOR _] --> B4["z_i"]
 ```
 
 We read this diagram as: if the inputs to a wire match the pattern at the top, then that wire must be used in the gates at the bottom, e.g. the input is an `OR` gate, then the output must be used in an `XOR` and an `AND` gate. (The blanks mean the inputs are _not_ $x_i$ and $y_i$.) This pattern holds for every wire except the first and last outputs and the first carry. So we can check for wires that don't match any of these patterns, and those wires will be the ones that must have been swapped. We don't even need to figure out which wires to swap! We can just sort the ones we find that are wrong and we get our answer. I think it might be possible to generate a pathological input that breaks this strategy, but it works for my input, so I'm moving on!
