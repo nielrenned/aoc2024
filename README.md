@@ -211,7 +211,15 @@ In theory, we should easily be able to extend this to Part 2! We expand our sear
 
 # Day 21
 
-TBD
+> In May 2025, I found the time to finally wrap this problem up.
+
+This ended up being the last problem I solved because of the initial difficulty in simply parsing the problem statement (imagining the layers of keypads was somewhat difficult for me). My solution for Part 1 involved actually generating the sequences of button presses. At each layer, I would generate all possible paths for the given sequence (at first without BFS, but I later decided to use it, for readability), then pass those sequences up to the next layer. This became intractable (for my code) after adding just one more layer of keypads, so Part 2 required something different.
+
+Part 2 ended up stumping me completely, so I went to the subreddits for hints. [This comment](https://old.reddit.com/r/adventofcode/comments/1hj2odw/2024_day_21_solutions/m33lhla/) was ultimately the one that helped me the most, so thanks `/u/evouga`! Any time we can abstract a problem enough to start writing math, I can instantly see where to go with the code. (Interestingly, I think it used to be the opposite, so all that grad school must've had an effect on me. Go figure.) We can condense what `/u/evouga` wrote into one concise mathematical statement.
+
+$$ cost(p, q, r) := \min\limits_{\{p_i\}\ \in\ paths(p,q)} \left( \sum\limits_{i=0}^{n-1} cost(p_i, p_{i+1}, r-1) \right); cost(p,q,0) := 1 $$
+
+where $paths$ gives all shortest paths between $p$ and $q$. (I know there is more to clarify here, but the conciseness calls to me!) Not only does this statement convert to recursive code in a straightforward way, it also makes it very clear that we should be caching the values of $cost$! Python has the great `@functools.cache` decorator, so we slap that bad boy on our cost function and call it a day.
 
 # Day 22
 
